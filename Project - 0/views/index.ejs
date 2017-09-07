@@ -1,0 +1,36 @@
+<% include partials/header %>
+<h1>Hello   <%= title%> from ejs</h1>
+
+<ul>
+    <% if(errors!=undefined){%>
+            <% errors.forEach(function (error) { %>
+                <li> <%= error.msg%></li>
+            <%})%>
+    <% }%>
+</ul>
+    <h1>Add Customer</h1>
+    <form action="users/add" method="post">
+        <label for="first_name">First Name</label><br>
+        <input type="text" name="first_name" id="first_name">
+        <br>
+        <label for="last_name">Last Name</label><br>
+        <input type="text" name="last_name" id="last_name">
+        <br>
+        <label for="email">Email</label><br>
+        <input type="text" name="email" id="email">
+        <br>
+        <input type="submit" value="Submit">
+    </form>
+    <ul>
+        <% users.forEach(function (t) { %>
+        <li> <%= t._id %>: <%= t.first_name %> <%= t.last_name %>, <%= t.email %>
+            <a href="#" class="deleteUser" data-id="<%= t._id%>">Delete</a>
+        </li>
+
+        <% })%>
+    </ul>
+
+
+<% include partials/footer%>
+
+
