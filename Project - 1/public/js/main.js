@@ -8,9 +8,9 @@ $(document).ready(function () {
 
             $.ajax({
                 type: 'DELETE',
-                url: '/article/'+id,
+                url: '/articles/'+id,
                 success: function (response) {
-                    alert('Deleted Succesfully!');
+                    //alert('Deleted Succesfully!');
                     window.location.href='/';
                 },
                 error:function (err) {
