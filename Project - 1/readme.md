@@ -1,6 +1,5 @@
-<h1> Express - NodeJS - Mongodb application</h1>
+<h1> Express - NodeJS - Mongodb Blog application</h1>
 
-Blog application
 
 
 Mongodb CRUD Application, Mongoose module 
