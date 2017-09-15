@@ -2,12 +2,17 @@ extends layout
 
 block content
     h1 #{title}
-    form(method='POST', action='/articles/add')
+    form(method='POST', action='/articles/add', enctype='multipart/form-data')
         #form-group
             label Title:
             input.form-control(name='Title',type='Text')
         #form-group
             label Body:
             textarea.form-control(name='Body')
+        br
+        #form-group
+            label.btn.btn-default.btn-file Upload Image
+                input(type='file', name='img')
+            span.filename(style='margin-left:5px;')
         br
         input.btn.btn-primary(type='submit')

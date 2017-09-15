@@ -1,6 +1,16 @@
+const multer = require('multer');
+
 const express = require('express');
 const router = express.Router();
+const fs = require('fs');
 
+
+//uploading variable of multer
+
+let uploading = multer({
+    dest: 'public/uploads/user_images/',
+    limits: {fileSize: 1000000, files:1},
+});
 
 //Bring in article model
 let Article = require('../models/articles');
@@ -15,7 +25,7 @@ router.get('/add',function (req,res) {
     });
 });
 
-router.post('/add',ensureAuthentication,function (req,res) {
+router.post('/add',ensureAuthentication,uploading.single('img'),function (req,res) {
 
     req.checkBody('Title', 'Title must be filled').notEmpty();
     //req.checkBody('Author', 'Author must be filled').notEmpty();
@@ -35,8 +45,15 @@ router.post('/add',ensureAuthentication,function (req,res) {
 
         article.title = req.body.Title;
         article.author = req.user._id;
+        console.log(req.user._id);
         article.body = req.body.Body;
-
+        article.image_url="";
+        if(req.file){
+            console.log(req.file);
+            let temp = req.file.originalname.split('.');
+            let temp1 = req.file.path.split('/');
+            article.image_url= temp1[1]+'/'+temp1[2]+'/'+temp1[3];
+        }
         article.save(function (err) {
             if (err) {
                 console.log(err);
@@ -65,17 +82,38 @@ router.get('/edit/:id',ensureAuthentication,function (req,res) {
 });
 
 //Update the article
-router.post('/edit/:id', function (req,res) {
+router.post('/edit/:id',uploading.single('img'),function (req,res) {
 
     let article = {};
 
-    article.title = req.body.Title;
-    article.author = req.body.Author;
-    article.body = req.body.Body;
 
+    article.title = req.body.Title;
+    article.body = req.body.Body;
+    if(req.file){
+        console.log(req.file);
+        let temp = req.file.originalname.split('.');
+        let temp1 = req.file.path.split('/');
+        article.image_url= temp1[1]+'/'+temp1[2]+'/'+temp1[3];
+
+        //remove old file from uploads/user_images folder
+        Article.findById(req.params.id,function (err,article) {
+            if (article.author != req.user._id) {
+                res.status(500).send();
+            }else{
+                let temp = article.image_url.split('.');
+                if(temp[0]!=""){
+                    fs.unlink('public/'+temp[0],function (err) {
+                        if(err){
+                            console.log(err);
+                        }
+                    });
+                }
+            }
+        });
+    }
     let query = {_id:req.params.id};
 
-    Article.update(query,article,function (err) {
+    Article.update(query,{$set:article},function (err) {
         if(err){
             console.log(err);
         }else{
@@ -119,6 +157,14 @@ router.delete('/:id',function (req,res) {
         if (article.author != req.user._id) {
             res.status(500).send();
         }else{
+            let temp = article.image_url.split('.');
+            if(temp[0]!=""){
+                fs.unlink('public/'+temp[0],function (err) {
+                    if(err){
+                        console.log(err);
+                    }
+                });
+            }
             Article.remove(query, function (err) {
                 if(err){
                     console.log(err);

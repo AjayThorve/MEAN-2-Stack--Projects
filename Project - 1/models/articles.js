@@ -13,6 +13,10 @@ let articleSchema = mongoose.Schema({
     body:{
         type: String,
         required: false
+    },
+    image_url:{
+        type: String,
+        required: false
     }
 });
 

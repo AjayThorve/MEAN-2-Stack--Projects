@@ -1,16 +1,19 @@
 extends layout
 
 block content
-    form(method='POST' action='/articles/edit/'+article._id)
+    form(method='POST' action='/articles/edit/'+article._id+'' , enctype='multipart/form-data')
         #form-group
             label Title:
             input.form-control(name='Title',type='Text',value=article.title)
         #form-group
-            label Author:
-            input.form-control(name='Author',type='Text',value=article.author)
-        #form-group
             label Body:
             textarea.form-control(name='Body')=article.body
+        #form-group
+            label Image:
+            br
+            label.btn.btn-default.btn-file Replace Current Image
+                input(type='file', name='img')
+            span.filename(style='margin-left:5px;')
         hr
         br
         input.btn.btn-default(type='submit',value='Update')

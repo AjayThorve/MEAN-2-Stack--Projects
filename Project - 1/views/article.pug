@@ -3,6 +3,7 @@ extends layout
 block content
     h1= article.title
     h5 Written by #{author}
+    img.img-responsive(src='../'+article.image_url+'')
     p= article.body
     hr
     if user

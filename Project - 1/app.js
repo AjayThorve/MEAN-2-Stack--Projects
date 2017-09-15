@@ -6,6 +6,8 @@ const expressValidator = require('express-validator');
 const flash = require('connect-flash');
 const session = require('express-session');
 const config = require('./config/database');
+const multer = require('multer');
+
 //mongodb connection
 mongoose.connect(config.database);
 var db = mongoose.connection;
